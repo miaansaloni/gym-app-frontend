@@ -42,7 +42,7 @@ function App() {
     loaded && (
       <BrowserRouter>
         <NavComponent />
-        <div style={{ height: "100vh" }}>
+        <div>
           <Routes>
             {/* rotte accessibili da tutti */}
             <Route path="/" element={<LandingPage />} />
