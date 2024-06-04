@@ -7,6 +7,15 @@ import { LOGIN } from "./redux/actions";
 import NavComponent from "./components/NavComponent";
 import FooterComponent from "./components/FooterComponent";
 import NotFound from "./pages/NotFound";
+import GuestRoutes from "./pages/GuestRoutes";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import LandingPage from "./pages/LandingPage";
+import ProfileComponent from "./pages/ProfileComponent";
+import ProtectedRoutes from "./pages/ProtectedRoutes";
+import PlansPricing from "./pages/PlansPricing";
+import ContactsComponent from "./pages/ContactsComponent";
+import CoursesComponent from "./pages/CoursesComponent";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -28,9 +37,36 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div>
-      <NavComponent />
-    </div>
+    loaded && (
+      <BrowserRouter>
+        <NavComponent />
+        <div style={{ height: "100vh" }}>
+          <Routes>
+            {/* rotte accessibili da tutti */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/plans&pricing" element={<PlansPricing />} />
+            <Route path="/contacts" element={<ContactsComponent />} />
+            <Route path="/courses" element={<CoursesComponent />} />
+
+            {/* rotte accessibili solo se NON si è loggati */}
+            <Route element={<GuestRoutes />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
+
+            {/* rotte accessibili solo se sei loggato */}
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/profile" element={<ProfileComponent />} />
+              {/* <Route path="/transcript" element={<Transcript />} /> */}
+            </Route>
+
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/404" />} />
+          </Routes>
+        </div>
+        <FooterComponent />
+      </BrowserRouter>
+    )
   );
 
   // return (
