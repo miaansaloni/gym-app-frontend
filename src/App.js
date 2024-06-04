@@ -16,6 +16,8 @@ import ProtectedRoutes from "./pages/ProtectedRoutes";
 import PlansPricing from "./pages/PlansPricing";
 import ContactsComponent from "./pages/ContactsComponent";
 import CoursesComponent from "./pages/CoursesComponent";
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -57,7 +59,8 @@ function App() {
             {/* rotte accessibili solo se sei loggato */}
             <Route element={<ProtectedRoutes />}>
               <Route path="/profile" element={<ProfileComponent />} />
-              {/* <Route path="/transcript" element={<Transcript />} /> */}
+              <Route path="/userdashboard" element={<UserDashboard />} />
+              <Route path="/admindashboard" element={<AdminDashboard />} />
             </Route>
 
             <Route path="/404" element={<NotFound />} />

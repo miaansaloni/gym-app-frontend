@@ -1,44 +1,41 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
-const CoursesComponent = () => {
+const UserDashboard = () => {
   const [courses, setCourses] = useState([]);
   const [error, setError] = useState(null);
 
-  const user = useSelector((state) => state.user);
-
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchUserCourses = async () => {
       try {
-        const response = await axios.get("/api/v1/courses");
-        setCourses(response.data);
+        const response = await axios.get("/api/v1/user-dashboard");
+        setCourses(response.data.courses);
       } catch (err) {
         setError(err);
-        console.error("There was an error fetching the courses!", err);
+        console.error("Error fetching your courses!", err);
       }
     };
 
-    fetchCourses();
+    fetchUserCourses();
   }, []);
 
-  const handleBookCourse = async (courseId) => {
+  const handleDeleteBooking = async (courseId) => {
     try {
-      const response = await axios.post("/api/v1//book-course/{courseId}", {
-        course_id: courseId,
-        user_id: user.id,
-      });
+      const response = await axios.delete(`/api/v1/delete-booking/${courseId}`);
       console.log(response.data.message);
+
+      // Rimuove il corso dalla lista dei corsi prenotati
+      setCourses(courses.filter((course) => course.id !== courseId));
     } catch (err) {
-      console.error("There was an error booking the course!", err);
+      console.error("Error deleting the booking!", err);
     }
   };
 
   return (
     <div>
-      <h1>Courses List</h1>
+      <h1>User Dashboard</h1>
       {error ? (
-        <p>There was an error fetching the courses.</p>
+        <p>Error fetching your courses.</p>
       ) : (
         <ul>
           {courses.map((course) => (
@@ -56,7 +53,10 @@ const CoursesComponent = () => {
               <p>
                 <strong>Starts at:</strong> {course.slot.start_hour}
               </p>
-              {user?.role === "user" && <button onClick={() => handleBookCourse(course.id)}>Book Course</button>}
+              <p>
+                <strong>Status:</strong> {course.pivot.status}
+              </p>
+              <button onClick={() => handleDeleteBooking(course.id)}>Delete Booking</button>
             </li>
           ))}
         </ul>
@@ -65,4 +65,4 @@ const CoursesComponent = () => {
   );
 };
 
-export default CoursesComponent;
+export default UserDashboard;
